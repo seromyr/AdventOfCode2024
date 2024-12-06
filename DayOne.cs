@@ -31,7 +31,8 @@
                 throw new Exception("Two lists don't have the same amount of members. Check your input source");
             }
 
-            Console.WriteLine($"The result is: {GetTheTotalDifferencesFromTwoLists()}");
+            Console.WriteLine($"The total distance between the lists? is: {GetTheTotalDifferencesFromTwoLists()}");
+            Console.WriteLine($"The similarity score is {GetSimilarityScore()}");
         }
 
         protected override void ParseInputData(string filePath)
@@ -93,6 +94,34 @@
         private List<int> SortAListAscending(List<int> inputList)
         {
             return inputList.OrderBy(i => i).ToList();
+        }
+
+        private int GetSimilarityScore()
+        {
+            int similarityScore = 0;
+            
+            for (int i = 0; i < _toCompareLists[0].Count; i++)
+            {
+                int repeatCount = GetRepeatCount(_toCompareLists[0][i], _toCompareLists[1]);
+                similarityScore += _toCompareLists[0][i] * repeatCount;
+            }
+
+            return similarityScore;
+        }
+        
+        private int GetRepeatCount(int number, List<int> list)
+        {
+            int count = 0;
+
+            foreach (int element in list)
+            {
+                if (number == element)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }
