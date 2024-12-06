@@ -1,33 +1,28 @@
 ﻿namespace AdventOfCode2024
 {
-    public class DayOne
+    public class DayOne : DaySolution
     {
-        private const string InputData = "Data/day-one-input.txt";
         private List<int>[] _toCompareLists = new List<int>[2];
-        
-        public void ShowResult()
+
+        public DayOne(string day, string inputData) : base(day, inputData)
         {
-            Console.WriteLine("Advent Of Code - Day One - Solution");
-            Initialize();
-            ProcessData();
+            Day = day;
+            InputData = inputData;
         }
-        
-        private void Initialize()
+
+        protected override void Initialize()
         {
-            Console.WriteLine("Preparing data...");
+            base.Initialize();
+
             for (int i = 0; i < _toCompareLists.Length; i++)
             {
                 _toCompareLists[i] = new List<int>();
             }
         }
 
-        private void ProcessData()
+        protected override void ProcessData()
         {
-            Console.WriteLine("Processing data...");
-            if (!CheckFileExist(InputData))
-            {
-                throw new FileNotFoundException($"The file '{InputData}' was not found.");
-            }
+            base.ProcessData();
 
             ParseInputData(InputData);
 
@@ -35,28 +30,23 @@
             {
                 throw new Exception("Two lists don't have the same amount of members. Check your input source");
             }
-            
+
             Console.WriteLine($"The result is: {GetTheTotalDifferencesFromTwoLists()}");
         }
 
-        private bool CheckFileExist(string filePath)
-        {
-            return File.Exists(filePath);
-        }
-
-        private void ParseInputData(string filePath)
+        protected override void ParseInputData(string filePath)
         {
             string[] content = File.ReadAllLines(filePath);
 
             Console.WriteLine("Parsing input data into two numerical lists...");
-            
+
             foreach (string line in content)
             {
                 ParseEachLine(line);
             }
         }
 
-        private void ParseEachLine(string line)
+        protected override void ParseEachLine(string line)
         {
             string[] parts = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -76,22 +66,12 @@
             return _toCompareLists[0].Count == _toCompareLists[1].Count;
         }
 
-        private int ConvertToNumber(string value)
-        {
-            if (int.TryParse(value, out int result))
-            {
-                return result;
-            }
-
-            throw new Exception($"Value '{value}' is not a valid number.");
-        }
-
         private int GetTheTotalDifferencesFromTwoLists()
         {
             SortListsAscending();
-            
+
             int totalDifference = 0;
-            
+
             Console.WriteLine("Getting the total differences from those two lists...");
             for (int i = 0; i < _toCompareLists[0].Count; i++)
             {
@@ -109,7 +89,7 @@
                 _toCompareLists[i] = SortAListAscending(_toCompareLists[i]);
             }
         }
-        
+
         private List<int> SortAListAscending(List<int> inputList)
         {
             return inputList.OrderBy(i => i).ToList();
