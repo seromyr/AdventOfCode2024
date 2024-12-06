@@ -14,3 +14,4 @@ C:\Development\AdventOfCode2024\AdventOfCode2024\obj\Debug\net6.0\ref\AdventOfCo
 C:\Development\AdventOfCode2024\AdventOfCode2024\obj\Debug\net6.0\AdventOfCode2024.pdb
 C:\Development\AdventOfCode2024\AdventOfCode2024\obj\Debug\net6.0\AdventOfCode2024.genruntimeconfig.cache
 C:\Development\AdventOfCode2024\AdventOfCode2024\bin\Debug\net6.0\Data\day-one-input.txt
+C:\Development\AdventOfCode2024\AdventOfCode2024\bin\Debug\net6.0\Data\day-two-input.txt
