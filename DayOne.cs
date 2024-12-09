@@ -24,7 +24,7 @@
         {
             base.ProcessData();
 
-            ParseInputData(InputData);
+            ParseInputData(InputData, "Parsing input data into two numerical lists...");
 
             if (!CompareTwoNewLists())
             {
@@ -33,18 +33,6 @@
 
             Console.WriteLine($"The total distance between the lists? is: {GetTheTotalDifferencesFromTwoLists()}");
             Console.WriteLine($"The similarity score is {GetSimilarityScore()}");
-        }
-
-        protected override void ParseInputData(string filePath)
-        {
-            string[] content = File.ReadAllLines(filePath);
-
-            Console.WriteLine("Parsing input data into two numerical lists...");
-
-            foreach (string line in content)
-            {
-                ParseEachLine(line);
-            }
         }
 
         protected override void ParseEachLine(string line)
