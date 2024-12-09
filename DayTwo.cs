@@ -13,55 +13,71 @@
                 _levels.Add(level);
             }
 
-            public bool IsSafe()
+            public bool IsSafe(List<int> levels = null)
             {
+                levels = levels ?? _levels;
+
                 if (_levels == null || _levels.Count < 2)
                 {
-                    throw new Exception("Invalid report data. Please check your input.");
+                    throw new ArgumentException("List must contain at least two elements.");
                 }
 
-                return (IsLevelsDecreasing() || IsLevelsIncreasing()) &&
-                       IsAnyTwoAdjacentLevelsDifferByAtLeastOneAndAtMostThree();
-            }
+                bool increasing = true;
+                bool initialized = false;
 
-            private bool IsLevelsIncreasing()
-            {
-                for (int i = 0; i < _levels.Count - 1; i++)
+                for (int i = 0; i < levels.Count - 1; i++)
                 {
-                    if (_levels[i] >= _levels[i + 1])
+                    int difference = levels[i + 1] - levels[i];
+                    int absDiff = Math.Abs(difference);
+
+                    if (absDiff < 1 || absDiff > 3)
                     {
                         return false;
+                    }
+
+                    if (!initialized)
+                    {
+                        if (difference > 0)
+                        {
+                            increasing = true;
+                            initialized = true;
+                        }
+                        else if (difference < 0)
+                        {
+                            increasing = false;
+                            initialized = true;
+                        }
+                    }
+                    else
+                    {
+                        if ((difference > 0 && !increasing) || (difference < 0 && increasing))
+                        {
+                            return false;
+                        }
                     }
                 }
 
                 return true;
             }
 
-            private bool IsLevelsDecreasing()
+            public bool IsSafeWithDampener(int index = 0)
             {
-                for (int i = 0; i < _levels.Count - 1; i++)
+                if (index >= _levels.Count)
                 {
-                    if (_levels[i] <= _levels[i + 1])
-                    {
-                        return false;
-                    }
+                    // Base case: if we've checked all possible indices
+                    return false;
                 }
 
-                return true;
-            }
+                var copy = new List<int>(_levels);
+                copy.RemoveAt(index);
 
-            private bool IsAnyTwoAdjacentLevelsDifferByAtLeastOneAndAtMostThree()
-            {
-                for (int i = 0; i < _levels.Count - 1; i++)
+                if (IsSafe(copy))
                 {
-                    int difference = Math.Abs(_levels[i] - _levels[i + 1]);
-                    if (difference < 1 || difference > 3)
-                    {
-                        return false;
-                    }
+                    return true;
                 }
 
-                return true;
+                // Recursively check the next index
+                return IsSafeWithDampener(index + 1);
             }
         }
 
@@ -80,7 +96,8 @@
             ParseInputData(InputData);
 
             Console.WriteLine($"There are {_reports.Count} reports.");
-            Console.WriteLine($"There are {CountSafeReport()} safe reports.");
+            Console.WriteLine($"There are {CountSafeReport(false)} safe reports.");
+            Console.WriteLine($"There are {CountSafeReport(true)} safe reports actually (with Problem Dampener ON).");
         }
 
         protected override void ParseInputData(string filePath)
@@ -114,13 +131,15 @@
             _reports.Add(report);
         }
 
-        private int CountSafeReport()
+        private int CountSafeReport(bool problemDampener)
         {
             int safeCount = 0;
 
             foreach (Report report in _reports)
             {
-                if (report.IsSafe())
+                bool isSafe = problemDampener ? report.IsSafeWithDampener() : report.IsSafe();
+
+                if (isSafe)
                 {
                     safeCount++;
                 }
